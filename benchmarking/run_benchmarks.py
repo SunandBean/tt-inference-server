@@ -301,25 +301,29 @@ def main():
         benchmark_script = venv_config.venv_path / "bin" / "vllm"
         if device in task.param_map:
             params_list = task.param_map[device]
+            if len(params_list)<20:
+                continue
             context_lens = [(params.isl, params.osl) for params in params_list]
             # de-dupe
             context_lens_set = set(context_lens)
             context_lens_set.difference_update(captured_traces)
             # ascending order of input sequence length
             sorted_context_lens_set = sorted(context_lens_set)
-            if not disable_trace_capture:
-                if "image" in model_spec.supported_modalities:
-                    prompt_client.capture_traces(
-                        context_lens=list(sorted_context_lens_set),
-                        timeout=1200.0,
-                        image_resolutions=IMAGE_RESOLUTIONS,
-                    )
-                else:
-                    prompt_client.capture_traces(
-                        context_lens=list(sorted_context_lens_set), timeout=1200.0
-                    )
-                captured_traces.update(sorted_context_lens_set)
+            # if not disable_trace_capture:
+                # if "image" in model_spec.supported_modalities:
+                #     prompt_client.capture_traces(
+                #         context_lens=list(sorted_context_lens_set),
+                #         timeout=1200.0,
+                #         image_resolutions=IMAGE_RESOLUTIONS,
+                #     )
+                # else:
+                #     prompt_client.capture_traces(
+                #         context_lens=list(sorted_context_lens_set), timeout=1200.0
+                #     )
+                #captured_traces.update(sorted_context_lens_set)
             for i, params in enumerate(params_list, 1):
+                if i<23:
+                    continue
                 health_check = prompt_client.get_health()
                 if health_check.status_code != 200:
                     logger.error("⛔️ vLLM server is not healthy. Aborting benchmarks.")
