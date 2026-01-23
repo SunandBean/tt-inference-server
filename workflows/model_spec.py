@@ -1048,8 +1048,8 @@ spec_templates = [
             "google/medgemma-27b-it",
         ],
         impl=tt_transformers_impl,
-        tt_metal_commit="3281fd8",
-        vllm_commit="e5eb7db",
+        tt_metal_commit="c254ee3",
+        vllm_commit="c4f2327",
         inference_engine=InferenceEngine.VLLM.value,
         device_model_specs=[
             DeviceModelSpec(
